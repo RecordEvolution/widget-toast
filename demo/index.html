@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en-GB">
+    <head>
+        <meta charset="utf-8" />
+        <title>Toast</title>
+        <style>
+            html,
+            body {
+                margin: 0;
+                padding: 0;
+                width: 100%;
+                height: 100%;
+                background-color: #f5f5f5;
+                font-family:
+                    Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+                color: #291f42;
+                font-weight: 400;
+                line-height: 1.5;
+                min-height: 100vh;
+            }
+
+            /* The host gives each widget a finite tile, so the demo must too — this also
+               lets us see the in-tile clipping/positioning behaviour realistically. */
+            #demo {
+                width: 420px;
+                height: 280px;
+                margin: 40px auto;
+                background: #ffffff;
+                border: 1px solid #ddd;
+                box-sizing: border-box;
+            }
+
+            #demo > * {
+                width: 100%;
+                height: 100%;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div id="demo"></div>
+
+        <script type="module">
+            import { render } from 'lit'
+            import { html, unsafeStatic } from 'lit/static-html.js'
+            import packageJson from '../package.json'
+            const tag = unsafeStatic(`widget-toast-${packageJson.version}`)
+            import '../src/widget-toast.ts'
+            import data from '../src/default-data.json'
+            import themeObject from './themes/light.json'
+            const theme = { theme_name: 'light', theme_object: themeObject }
+
+            render(
+                html`
+                    <${tag} .theme="${theme}" .inputData=${data}>
+                        web component is not registered. Make sure to use the tag with the correct version
+                        string from the package.json
+                    </${tag}>
+                `,
+                document.getElementById('demo')
+            )
+
+            const widget = document.getElementById('demo').children[0]
+
+            // Mimics the host pushing a new backend row every ~1.5s. Each tick reassigns
+            // `.inputData` to a NEW object reference so the widget detects a fresh message.
+            const samples = [
+                { message: 'Sensor 4 back online', type: 'success' },
+                { message: 'Disk usage at 91%', type: 'warning' },
+                { message: 'Disk usage at 91%', type: 'warning' }, // identical → must still show
+                { message: 'Connection to broker lost', type: 'error' },
+                { message: 'Config reloaded', type: 'info' }
+            ]
+
+            let i = 0
+            setInterval(() => {
+                const sample = samples[i % samples.length]
+                i++
+                widget.inputData = { ...data, message: sample.message, type: sample.type }
+            }, 1500)
+        </script>
+    </body>
+</html>

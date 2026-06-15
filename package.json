@@ -1,0 +1,60 @@
+{
+    "name": "@record-evolution/widget-toast",
+    "description": "REWidget widget-toast",
+    "license": "MIT",
+    "author": "widget-toast",
+    "version": "1.0.0",
+    "engines": {
+        "bun": ">=1.2.0"
+    },
+    "type": "module",
+    "main": "dist/widget-toast.js",
+    "types": "dist/src/widget-toast.d.ts",
+    "files": [
+        "dist",
+        "src",
+        "thumbnail.png",
+        "thumbnail.webp"
+    ],
+    "scripts": {
+        "start": "bun --bun vite build --watch & bun --bun vite",
+        "build": "bun --bun vite build",
+        "watch": "bun --bun vite build --watch",
+        "link": "bun run build && bun link && cd ../RESWARM/frontend && bun link @record-evolution/widget-toast",
+        "unlink": "bun unlink && cd ../RESWARM/frontend && bun install",
+        "types": "cat src/definition-schema.json | bun --bun json2ts --style.tabWidth=4 > src/definition-schema.d.ts",
+        "release": "bun run build && bun run types && bun pm version patch --no-git-tag-version && V=$(bun -e 'console.log(require(\"./package.json\").version)') && git commit -am \"$V\" && git tag \"$V\" && git push && git push --tag && bun run build"
+    },
+    "dependencies": {
+        "lit": "^3.3.3",
+        "tslib": "^2.8.1"
+    },
+    "devDependencies": {
+        "@custom-elements-manifest/analyzer": "^0.10.10",
+        "@rollup/plugin-replace": "^6.0.2",
+        "@typescript-eslint/eslint-plugin": "^8.45.0",
+        "@typescript-eslint/parser": "^8.45.0",
+        "eslint": "^9.36.0",
+        "eslint-config-prettier": "^10.1.5",
+        "husky": "^9.1.7",
+        "json-schema-to-typescript": "^15.0.4",
+        "lint-staged": "^16.2.3",
+        "prettier": "^3.6.2",
+        "rimraf": "^6.0.1",
+        "typescript": "5.9.3",
+        "vite": "^7.3.0"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/RecordEvolution/widget-toast.git"
+    },
+    "keywords": [
+        "widget",
+        "toast",
+        "notification"
+    ],
+    "bugs": {
+        "url": "https://github.com/RecordEvolution/widget-toast/issues"
+    },
+    "homepage": "https://github.com/RecordEvolution/widget-toast#readme"
+}

@@ -1,0 +1,13 @@
+{
+    "message": "Deployment completed successfully",
+    "type": "success",
+    "displayTime": 4000,
+    "position": "top-right",
+    "maxVisible": 3,
+    "showIcon": true,
+    "showCloseButton": true,
+    "successColor": "",
+    "errorColor": "",
+    "infoColor": "",
+    "warningColor": ""
+}
