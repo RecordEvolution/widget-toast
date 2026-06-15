@@ -258,6 +258,11 @@ export class WidgetToast extends LitElement {
 
         .close {
             flex: 0 0 auto;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            /* match one line of message text so the glyph centers on the first line */
+            height: 1.35em;
             cursor: pointer;
             border: none;
             background: transparent;

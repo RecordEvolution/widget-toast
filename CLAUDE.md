@@ -55,6 +55,7 @@ Not implemented (possible future enhancements): pause-auto-dismiss-on-hover and 
 ### Build pipeline
 
 `vite.config.ts` configures a library build:
+
 - Single ES-module output (`dist/widget-toast.js`) with sourcemaps and a license banner.
 - Nothing is externalized (self-contained widget; `lit`/`tslib` are bundled).
 - `@rollup/plugin-replace` substitutes `versionplaceholder` → current `package.json` version (affects the custom element tag name and the `version` class field).
@@ -62,4 +63,4 @@ Not implemented (possible future enhancements): pause-auto-dismiss-on-hover and 
 
 ### Release flow
 
-Tags pushed to GitHub trigger `.github/workflows/build-publish.yml` which runs on `oven-sh/setup-bun`: `bun install --frozen-lockfile`, `bun run build`, then `bun publish --access public` and creates a GitHub Release (the version is read with `jq`, no Node). `bun run release` is the canonical local command — it produces bare semver tags (e.g. `1.0.0`, not `v1.0.0`) to match the rest of the monorepo.
+Tags pushed to GitHub trigger `.github/workflows/build-publish.yml` which runs on `oven-sh/setup-bun`: `bun install --frozen-lockfile`, `bun run build`, then `bun publish --access public` and creates a GitHub Release (the version is read with `jq`, no Node). Auth uses the `NPM_CONFIG_TOKEN` env var fed from the `NPM_TOKEN` repo/org secret — `bun publish` reads `NPM_CONFIG_TOKEN`, not a `~/.npmrc` `_authToken` like `npm publish` does, so that secret must be available to this repository. `bun run release` is the canonical local command — it produces bare semver tags (e.g. `1.0.0`, not `v1.0.0`) to match the rest of the monorepo.

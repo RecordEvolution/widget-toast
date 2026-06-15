@@ -2,7 +2,7 @@
     "message": "Deployment completed successfully",
     "type": "success",
     "displayTime": 4000,
-    "position": "top-right",
+    "position": "bottom-left",
     "maxVisible": 3,
     "showIcon": true,
     "showCloseButton": true,

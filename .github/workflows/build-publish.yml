@@ -24,11 +24,12 @@ jobs:
       - name: Build
         run: bun run build
 
-      - name: Login to npm
-        run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
-
       - name: Publish to npm
         run: bun publish --access public
+        env:
+          # bun publish reads the token from NPM_CONFIG_TOKEN (it does not reliably
+          # pick up a ~/.npmrc _authToken the way `npm publish` does).
+          NPM_CONFIG_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Get the new version
         id: get_version
