@@ -224,7 +224,10 @@ export class WidgetToast extends LitElement {
             padding: 8px 10px;
             border-radius: 6px;
             border-left: 4px solid var(--toast-accent, #1565c0);
-            background: var(--toast-bg, #ffffff);
+            /* Toasts must stay translucent even when the theme supplies a fully opaque
+               color, so the alpha is forced here rather than trusting --toast-bg. */
+            background: color-mix(in srgb, var(--toast-bg, #ffffff) 85%, transparent);
+            backdrop-filter: blur(3px);
             color: var(--toast-fg, #222222);
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
             font-size: clamp(11px, 3.5cqw, 14px);
