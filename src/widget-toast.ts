@@ -162,6 +162,9 @@ export class WidgetToast extends LitElement {
             overflow: hidden;
             font-family: sans-serif;
             container-type: size;
+            /* The host spans the whole widget item; it must be click-through so it
+               never blocks the dashboard underneath. Only .toast re-enables events. */
+            pointer-events: none;
         }
 
         .stack {
