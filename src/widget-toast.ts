@@ -1,6 +1,6 @@
 import { html, css, LitElement, PropertyValues } from 'lit'
 import { customElement, property, state } from 'lit/decorators.js'
-import { InputData } from './definition-schema.js'
+import { ToastNotificationConfiguration } from './definition-schema.js'
 
 type Theme = {
     theme_name: string
@@ -37,7 +37,7 @@ const LEAVE_MS = 250
 @customElement('widget-toast-versionplaceholder')
 export class WidgetToast extends LitElement {
     @property({ type: Object })
-    inputData?: InputData
+    inputData?: ToastNotificationConfiguration
 
     @property({ type: Object })
     theme?: Theme

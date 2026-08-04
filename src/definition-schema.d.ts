@@ -37,7 +37,7 @@ export type ShowCloseButton = boolean;
 /**
  * A transient toast / notification widget. The backend publishes rows into a data-backend table; bind the message and severity columns of that table to this widget, and each newly published row pops up a short-lived toast inside the widget tile. Use it to surface live success / error / info / warning events on a dashboard. The message text and severity are data-driven (they reflect the latest published row), while the display time, position within the tile, stacking limit and styling are static configuration.
  */
-export interface InputData {
+export interface ToastNotificationConfiguration {
     message?: Message;
     type?: Severity;
     displayTime?: DisplayTimeMs;

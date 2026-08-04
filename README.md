@@ -27,7 +27,7 @@ bun add @record-evolution/widget-toast
 ## Expected data format
 
 ```ts
-interface InputData {
+interface ToastNotificationConfiguration {
   message?: string // data-driven: the latest published message (empty is ignored)
   type?: 'success' | 'error' | 'info' | 'warning' // data-driven severity (default 'info')
   displayTime?: number // ms before auto-dismiss; 0 = persist until closed (default 4000)

@@ -1,6 +1,20 @@
 {
-    "title": "InputData",
+    "title": "Toast Notification Configuration",
     "description": "A transient toast / notification widget. The backend publishes rows into a data-backend table; bind the message and severity columns of that table to this widget, and each newly published row pops up a short-lived toast inside the widget tile. Use it to surface live success / error / info / warning events on a dashboard. The message text and severity are data-driven (they reflect the latest published row), while the display time, position within the tile, stacking limit and styling are static configuration.",
+    "aiSelection": {
+        "dataShape": "Newly published rows of a backend table. The message text and a severity (success / error / info / warning) are data-driven, and each new row pops up a short-lived notification inside the tile. Display time, position, stacking limit and colours are static configuration.",
+        "useWhen": [
+            "Events should announce themselves as they happen — a job finished, a batch failed, a threshold was crossed.",
+            "The dashboard should react visibly to newly published rows without the user watching a list.",
+            "Severity should be conveyed by colour and icon for a moment rather than kept on screen."
+        ],
+        "notFor": [
+            "A message that must remain readable — toasts disappear after displayTime. Use widget-label, widget-textbox or widget-markdown.",
+            "The history of what happened, browsable after the fact — use widget-table.",
+            "A standing condition rather than an event — use widget-signal.",
+            "How often events occur, or their distribution — use widget-linechart with dataseries[].type: 'bar'."
+        ]
+    },
     "type": "object",
     "properties": {
         "message": {
