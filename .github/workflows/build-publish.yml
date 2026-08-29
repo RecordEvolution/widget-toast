@@ -5,18 +5,33 @@ on:
     tags:
       - "*"
 
+# id-token lets the runner mint the OIDC token npm exchanges for publish rights.
+permissions:
+  contents: write
+  id-token: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Install Bun
         uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
+
+      # bun installs and builds; npm publishes. `bun publish` cannot do npm
+      # trusted publishing (oven-sh/bun#22423) — it only knows tokens, and
+      # bypass-2FA tokens lose publish in January 2027. So the publish step,
+      # and only the publish step, runs on npm.
+      - name: Install Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: "24.20.0"
+          registry-url: "https://registry.npmjs.org"
 
       - name: Install dependencies
         run: bun install --frozen-lockfile
@@ -24,22 +39,20 @@ jobs:
       - name: Build
         run: bun run build
 
+      # No NPM_CONFIG_TOKEN. npm detects the OIDC environment and authenticates
+      # against the trusted publisher configured for this package
+      # (RecordEvolution/widget-toast :: build-publish.yml).
       - name: Publish to npm
-        run: bun publish --access public
-        env:
-          # bun publish reads the token from NPM_CONFIG_TOKEN (it does not reliably
-          # pick up a ~/.npmrc _authToken the way `npm publish` does).
-          NPM_CONFIG_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm publish --access public
 
       - name: Get the new version
         id: get_version
         run: echo "version=$(jq -r .version package.json)" >> "$GITHUB_OUTPUT"
 
       - name: Create GitHub Release
-        uses: actions/create-release@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ steps.get_version.outputs.version }}
-          release_name: Release ${{ steps.get_version.outputs.version }}
-          draft: false
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "${{ steps.get_version.outputs.version }}" \
+            --title "Release ${{ steps.get_version.outputs.version }}" \
+            --generate-notes
