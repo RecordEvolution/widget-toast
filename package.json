@@ -23,7 +23,11 @@
         "link": "bun run build && bun link && cd ../RESWARM/frontend && bun link @record-evolution/widget-toast",
         "unlink": "bun unlink && cd ../RESWARM/frontend && bun install",
         "types": "cat src/definition-schema.json | json2ts --style.tabWidth=4 > src/definition-schema.d.ts",
-        "release": "bun run build && bun run types && bun pm version patch --no-git-tag-version && V=$(bun -e 'console.log(require(\"./package.json\").version)') && git commit -am \"$V\" && git tag \"$V\" && git push && git push --tag && bun run build"
+        "preversion": "sh scripts/release-preflight.sh",
+        "postversion": "git push --follow-tags && sh scripts/release-verify.sh",
+        "release": "npm version patch",
+        "release:minor": "npm version minor",
+        "release:major": "npm version major"
     },
     "dependencies": {
         "lit": "^3.3.3",
