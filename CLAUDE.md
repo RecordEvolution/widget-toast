@@ -12,7 +12,7 @@ This package uses **Bun** as its package manager and runtime — there is no Nod
 - `bun run watch` — `vite build --watch` only (no dev server).
 - `bun run types` — Regenerate `src/definition-schema.d.ts` from `src/definition-schema.json` using `json2ts`. Run this after editing the JSON schema.
 - `bun run analyze` — Generate Custom Elements Manifest (`cem analyze --litelement`).
-- `bun run release` — Build, regenerate types, bump patch version, then create a **bare** semver git tag (no `v` prefix) and push commit + tag. `bun pm version` would tag with a `v` prefix, so the script uses `bun pm version patch --no-git-tag-version` and tags explicitly to match the repo convention. CI publishes to npm on tag push.
+- `npm run release` — `npm version patch`: preflight guards (on `main`, clean tree, not behind `origin/main`, generated files current, build passes), then commit, bare-semver tag, `git push --follow-tags`, then waits on the CI run and fails if the npm publish fails. `npm run release:minor` / `release:major` for other bumps. This is the one script that runs on npm rather than bun: `npm version` creates the **annotated** tag that `--follow-tags` needs, whereas the old `git tag` produced a lightweight tag that `--follow-tags` silently skips. The bare `v`-less prefix comes from `tag-version-prefix=""` in `.npmrc`.
 - `bun run link` / `bun run unlink` — Link this package into a sibling `../RESWARM/frontend` checkout for local integration testing.
 
 No test runner or lint script is wired up despite README mentioning `lint`/`format` — those scripts do not exist in `package.json`. ESLint/Prettier configs are present (`.prettierrc`, eslint deps) but invocation is manual.
@@ -63,7 +63,7 @@ Not implemented (possible future enhancements): pause-auto-dismiss-on-hover and 
 
 ### Release flow
 
-Tags pushed to GitHub trigger `.github/workflows/build-publish.yml` which runs on `oven-sh/setup-bun`: `bun install --frozen-lockfile`, `bun run build`, then `bun publish --access public` and creates a GitHub Release (the version is read with `jq`, no Node). Auth uses the `NPM_CONFIG_TOKEN` env var fed from the `NPM_TOKEN` repo/org secret — `bun publish` reads `NPM_CONFIG_TOKEN`, not a `~/.npmrc` `_authToken` like `npm publish` does, so that secret must be available to this repository. `bun run release` is the canonical local command — it produces bare semver tags (e.g. `1.0.0`, not `v1.0.0`) to match the rest of the monorepo.
+Tags pushed to GitHub trigger `.github/workflows/build-publish.yml`: bun installs and builds, then the publish step alone runs on npm (`npm publish --access public`) via npm trusted publishing (OIDC — no `NPM_TOKEN`), and a GitHub Release is created. `bun publish` cannot do trusted publishing (oven-sh/bun#22423), which is why that one step switches to npm. `npm run release` is the canonical local command — it produces bare semver tags (e.g. `1.0.0`, not `v1.0.0`) to match the rest of the widget repos.
 
 ## `aiSelection` in `src/definition-schema.json`
 
