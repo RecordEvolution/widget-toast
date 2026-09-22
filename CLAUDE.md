@@ -26,7 +26,7 @@ This repo publishes `@record-evolution/widget-toast`, a single Lit web component
 ### Entry point and integration
 
 - `src/widget-toast.ts` defines the Lit element. The custom element tag is `widget-toast-versionplaceholder` — the literal string `versionplaceholder` is replaced at build time by `@rollup/plugin-replace` (see `vite.config.ts`) with `pkg.version`. This versioned tag name lets multiple widget versions coexist on the same page (the host app reads the version from `package.json` and constructs the tag dynamically — see `demo/index.html`).
-- The host platform passes data via two reactive properties: `inputData: ToastNotificationConfiguration` (the message + config) and `theme: { theme_name, theme_object }`. Theme can also be supplied via CSS custom properties `--re-text-color` and `--re-tile-background-color`.
+- The host platform passes data via two reactive properties: `inputData: ToastNotificationConfiguration` (the message + config) and `theme: { theme_name, theme_object }`. Theme can also be supplied via CSS custom properties `--re-text-color` and `--re-tile-background-color`. These are not snapshotted: `registerTheme()` stores a `var(--re-…, <theme value>)` chain, so a change to the host property repaints the tile live without the widget being told.
 - **This widget is fully self-contained — it has NO `echarts` and NO peer dependencies.** `lit` and `tslib` are bundled into `dist/widget-toast.js` (unlike `widget-doughnut`, the Rollup config does not externalize anything).
 
 ### How "listening to a topic" works

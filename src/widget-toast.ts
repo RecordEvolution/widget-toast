@@ -85,10 +85,8 @@ export class WidgetToast extends LitElement {
     }
 
     registerTheme(theme?: Theme) {
-        const cssTextColor = getComputedStyle(this).getPropertyValue('--re-text-color').trim()
-        const cssBgColor = getComputedStyle(this).getPropertyValue('--re-tile-background-color').trim()
-        this.themeBgColor = cssBgColor || theme?.theme_object?.backgroundColor
-        this.themeTextColor = cssTextColor || theme?.theme_object?.title?.textStyle?.color
+        this.themeBgColor = `var(--re-tile-background-color, ${theme?.theme_object?.backgroundColor || 'transparent'})`
+        this.themeTextColor = `var(--re-text-color, ${theme?.theme_object?.title?.textStyle?.color || 'inherit'})`
     }
 
     private normalizeType(value?: string): Severity {
