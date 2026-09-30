@@ -24,6 +24,7 @@
         "unlink": "bun unlink && cd ../RESWARM/frontend && bun install",
         "types": "cat src/definition-schema.json | json2ts --style.tabWidth=4 > src/definition-schema.d.ts",
         "preversion": "sh scripts/release-preflight.sh",
+        "version": "npm run build",
         "postversion": "git push --follow-tags && sh scripts/release-verify.sh",
         "release": "npm version patch",
         "release:minor": "npm version minor",
